@@ -3,18 +3,17 @@ package visao;
 import java.util.ArrayList;
 
 import dominio.ClasseProduto;
-import fakedb.ClasseProdutoFakeDB;
+import repositorio.ClasseProdutoRepo;
 
 public class ClasseProdutoVisao {
     public void Exibir(){
-        
-        ClasseProdutoFakeDB fakeDB = new ClasseProdutoFakeDB();
-        ArrayList<ClasseProduto> tabelaProduto = fakeDB.getTabela();
-        for (ClasseProduto cp : tabelaProduto) {
-            this.Imprimir(cp);
+        ClasseProdutoRepo repo = new ClasseProdutoRepo();
+        ArrayList<ClasseProduto> lista = repo.Browse();
+        for (ClasseProduto cp : lista) {
+            this.Imprimir(cp);            
         }
-
     }
+
     private void Imprimir(ClasseProduto alvo){
         System.out.println("Classe de produto: ");
         System.out.println("Código: " +alvo.getCodigo());
