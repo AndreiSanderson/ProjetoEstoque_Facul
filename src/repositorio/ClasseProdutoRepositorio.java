@@ -3,11 +3,11 @@ package repositorio;
 import dominio.ClasseProduto;
 import fakedb.ClasseProdutoFakeDB;
 
-public class ClasseProdutoRepo extends BaseRepositorio <ClasseProduto> {
+public class ClasseProdutoRepositorio extends BaseRepositorio <ClasseProduto> {
 
     private ClasseProdutoFakeDB db;
 
-    public ClasseProdutoRepo(){
+    public ClasseProdutoRepositorio(){
         this.db = new ClasseProdutoFakeDB();
         this.dados = this.db.getTabela();
     }
