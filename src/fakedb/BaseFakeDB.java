@@ -6,7 +6,7 @@ public abstract class BaseFakeDB <TDominio> {
     
     protected ArrayList<TDominio> tabela;
 
-    public ArrayList<TDominio> getTabela() {
+    public ArrayList<TDominio> getTabela(){
         return this.tabela;
     }
 

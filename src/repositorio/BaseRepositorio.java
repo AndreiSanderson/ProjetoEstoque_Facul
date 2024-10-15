@@ -9,10 +9,8 @@ public abstract class BaseRepositorio<TDominio> {
     public ArrayList <TDominio> Browse(){
         return this.dados;
     }
-
     public abstract TDominio Read(int chave);
     public abstract TDominio Edit(TDominio instancia);
     public abstract TDominio Add(TDominio instancia);
     public abstract TDominio Delete(int chave);
-
 }
