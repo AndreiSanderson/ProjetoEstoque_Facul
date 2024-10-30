@@ -29,7 +29,7 @@ public class ClasseProdutoRepositorio extends BaseRepositorio <ClasseProduto> {
             cp.setDescricao(instancia.getDescricao());
             return cp;
         }else{
-        return null;
+            return null;
         }
     }
 
@@ -50,8 +50,6 @@ public class ClasseProdutoRepositorio extends BaseRepositorio <ClasseProduto> {
             return cp;
         }else{
             return null;
-        }
-        
+        } 
     }
-
 }
