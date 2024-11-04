@@ -1,4 +1,4 @@
-package visao;
+package visao.menu;
 
 import java.util.Scanner;
 

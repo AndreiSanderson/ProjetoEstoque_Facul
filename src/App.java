@@ -1,6 +1,7 @@
 import dominio.ClasseProduto;
-import visao.ClasseProdutoMenu;
-import visao.ClasseProdutoVisao;
+import visao.menu.ClasseProdutoMenu;
+import visao.visao2.ClasseProdutoVisao;
+
 import java.time.LocalDate;
 
 public class App {
@@ -9,16 +10,7 @@ public class App {
         ClasseProdutoMenu menuzinho = new ClasseProdutoMenu();
         menuzinho.ExibirMenu();
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
         /*ClasseProdutoVisao visao = new ClasseProdutoVisao();
 
         //Imprimir tudo
