@@ -3,12 +3,15 @@ package visao.menu;
 import java.util.ArrayList;
 import dominio.ClasseProduto;
 import servico.ClasseProdutoServico;
+import visao.Menuzao;
 import visao.Util;
 import java.time.LocalDate;
 
 public class ClasseProdutoMenu extends BaseMenu{
 
     private ClasseProdutoServico srv;
+
+    Menuzao menuzao = new Menuzao();
 
     public ClasseProdutoMenu(){
         super();
@@ -29,6 +32,7 @@ public class ClasseProdutoMenu extends BaseMenu{
             System.out.println("9 - Sair");
             System.out.print("Selecione uma opção: ");
 
+            try {
             opcao = this.scanner.nextInt();
             switch (opcao) {
                 case 1:
@@ -47,11 +51,17 @@ public class ClasseProdutoMenu extends BaseMenu{
                     this.Remover();        
                     break;
                 case 9:
-                    System.out.println("Saindo...");
+                    this.menuzao.ExibirMenuzao();
                     break;
                 default:
                     System.out.println("Opção Inválida!");
                     break;
+                }    
+            } catch (Exception e) {
+                System.out.println("Erro: " + e.getMessage());
+                System.out.println("Clique <ENTER> para continuar...");
+                this.scanner.nextLine();
+                this.scanner.nextLine();
             }
         }
     }
@@ -60,13 +70,18 @@ public class ClasseProdutoMenu extends BaseMenu{
     public void Listar() {
         Util.LimparConsole();
         System.out.println("listando");
-
-        ArrayList<ClasseProduto> lista = this.srv.Navegar();
-        System.out.println("=====================================================");
-        for (ClasseProduto alvo : lista) {
-            this.ImprimirPorLinha(alvo);
+        try {
+            ArrayList<ClasseProduto> lista = this.srv.Navegar();
+            System.out.println("=====================================================");
+            for (ClasseProduto alvo : lista) {
+                this.ImprimirPorLinha(alvo);
+            }   
+        } catch (Exception e) {
+            System.out.println("Erro: " +e.getMessage());
+            System.out.println("Clique <ENTER> para continuar...");
+            this.scanner.nextLine();
+            this.scanner.nextLine();
         }
-
         System.out.println("Clique <ENTER> para continuar...");
         this.scanner.nextLine();
         this.scanner.nextLine();
@@ -76,17 +91,21 @@ public class ClasseProdutoMenu extends BaseMenu{
     public void Localizar() {
         Util.LimparConsole();      
         System.out.println("Localizando");
-
         System.out.print("Informe o código da classe de produto: ");
         int cod = this.scanner.nextInt();
-
-        ClasseProduto cp = this.srv.Ler(cod);
-        if(cp != null){
-            this.ImprimirPorLinha(cp);
-        }else{
-            System.out.println("PROBLEMA - Classe de Produto não encontrada!");
+        try {
+            ClasseProduto cp = this.srv.Ler(cod);
+            if(cp != null){
+                this.ImprimirPorLinha(cp);
+            }else{
+                System.out.println("PROBLEMA - Classe de Produto não encontrada!");
+            }
+        } catch (Exception e) {
+            System.out.println("Erro: " +e.getMessage());
+            System.out.println("Clique <ENTER> para continuar...");
+            this.scanner.nextLine();
+            this.scanner.nextLine();
         }
-
         System.out.println("Clique <ENTER> para continuar...");
         this.scanner.nextLine();
         this.scanner.nextLine();
@@ -103,14 +122,18 @@ public class ClasseProdutoMenu extends BaseMenu{
         ClasseProduto cp = new ClasseProduto();
         cp.setDescricao(descricao);
         cp.setDataDeInclusao(LocalDate.now());
-
-        //ClasseProduto cpnovo = this.srv.Adicionar(cp); //<-método didatico
-        if(this.srv.Adicionar(cp) != null){
-            System.out.println("Classe de produto adicionada com sucesso!");
-        }else{
-            System.out.println("PROBLEMA - Erro ao adicionar uma nova classe produto!");
+        try {
+            if(this.srv.Adicionar(cp) != null){
+                System.out.println("Classe de produto adicionada com sucesso!");
+            }else{
+                System.out.println("PROBLEMA - Erro ao adicionar uma nova classe produto!");
+            }  
+        } catch (Exception e) {
+            System.out.println("Erro: " +e.getMessage());
+            System.out.println("Clique <ENTER> para continuar...");
+            this.scanner.nextLine();
+            this.scanner.nextLine();
         }
-
         System.out.println("Clique <ENTER> para continuar...");
         this.scanner.nextLine();
         this.scanner.nextLine();
@@ -123,22 +146,26 @@ public class ClasseProdutoMenu extends BaseMenu{
 
         System.out.print("Informe o código da classe de produto: ");
         int cod = this.scanner.nextInt();
-
-        ClasseProduto cp = this.srv.Ler(cod);
-        if(cp != null){
-            System.out.print("Informe a nova Descrição: ");
-            String descricao = this.scanner.next();
-            cp.setDescricao(descricao);
-            
-            if(this.srv.Editar(cp) != null){
-                System.out.println("Alteração realizada com sucesso!");
+        try {
+            ClasseProduto cp = this.srv.Ler(cod);
+            if(cp != null){
+                System.out.print("Informe a nova Descrição: ");
+                String descricao = this.scanner.next();
+                cp.setDescricao(descricao);
+                if(this.srv.Editar(cp) != null){
+                    System.out.println("Alteração realizada com sucesso!");
+                }else{
+                    System.out.println("PROBLEMA - Não foi possível realizar a alteração solicitada!");
+                }
             }else{
-                System.out.println("PROBLEMA - Não foi possível realizar a alteração solicitada!");
-            }
-
-        }else{
             System.out.println("PROBLEMA - Classe de Produto não encontrada!");
         }
+    } catch (Exception e) {
+        System.out.println("Erro: " +e.getMessage());
+        System.out.println("Clique <ENTER> para continuar...");
+        this.scanner.nextLine();
+        this.scanner.nextLine();
+    }
 
         System.out.println("Clique <ENTER> para continuar...");
         this.scanner.nextLine();
@@ -149,33 +176,37 @@ public class ClasseProdutoMenu extends BaseMenu{
     public void Remover() {
         Util.LimparConsole();      
         System.out.println("Removendo");
-
         System.out.print("Informe o código da classe de produto: ");
         int cod = this.scanner.nextInt();
-
-        ClasseProduto cp = this.srv.Ler(cod);
-        if(cp != null){
-            if(this.srv.Deletar(cod) != null){
-                System.out.println("Classe de produto excluída com sucesso!");
+        try {
+            ClasseProduto cp = this.srv.Ler(cod);
+            if(cp != null){
+                if(this.srv.Deletar(cod) != null){
+                    System.out.println("Classe de produto excluída com sucesso!");
+                }else{
+                    System.out.println("PROBLEMA - Classe de produto não foi excluída!");
+                }
             }else{
-                System.out.println("PROBLEMA - Classe de produto não foi excluída!");
-            }
-        }else{
-            System.out.println("PROBLEMA - Classe de Produto não encontrada!");
+                System.out.println("PROBLEMA - Classe de Produto não encontrada!");
+            }  
+        } catch (Exception e) {
+            System.out.println("Erro: " +e.getMessage());
+            System.out.println("Clique <ENTER> para continuar...");
+            this.scanner.nextLine();
+            this.scanner.nextLine();
         }
-
         System.out.println("Clique <ENTER> para continuar...");
         this.scanner.nextLine();
         this.scanner.nextLine();
     }
 
-        private void ImprimirPorLinha(ClasseProduto alvo){
-        String mensagem = "";
-        mensagem += "Classe de produto: ";
-        mensagem += "Código: " +alvo.getCodigo() +" | ";
-        mensagem += "Descrição: " +alvo.getDescricao()+" | ";
-        mensagem += "Data de inclusão: " +alvo.getDataDeInclusao();
-        System.out.println(mensagem);
+    private void ImprimirPorLinha(ClasseProduto alvo){
+    String mensagem = "";
+    mensagem += "Classe de produto: ";
+    mensagem += "Código: " +alvo.getCodigo() +" | ";
+    mensagem += "Descrição: " +alvo.getDescricao()+" | ";
+    mensagem += "Data de inclusão: " +alvo.getDataDeInclusao();
+    System.out.println(mensagem);
     }
     
 }

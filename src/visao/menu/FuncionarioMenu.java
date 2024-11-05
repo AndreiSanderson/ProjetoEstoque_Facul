@@ -4,10 +4,12 @@ import java.util.ArrayList;
 
 import dominio.Funcionario;
 import servico.FuncionarioServico;
+import visao.Menuzao;
 import visao.Util;
 
 public class FuncionarioMenu extends BaseMenu{
-        private FuncionarioServico srv;
+    Menuzao menuzao = new Menuzao();
+    private FuncionarioServico srv;
 
     public FuncionarioMenu(){
         super();
@@ -27,30 +29,36 @@ public class FuncionarioMenu extends BaseMenu{
             System.out.println("5 - Remover");
             System.out.println("9 - Sair");
             System.out.print("Selecione uma opção: ");
-
-            opcao = this.scanner.nextInt();
-            switch (opcao) {
-                case 1:
-                    this.Listar();  
-                    break;
-                case 2:
-                    this.Localizar();
-                    break;
-                case 3:
-                    this.Adicionar();        
-                    break;
-                case 4:
-                    this.Atualizar();
-                    break;
-                case 5:
-                    this.Remover();        
-                    break;
-                case 9:
-                    System.out.println("Saindo...");
-                    break;
-                default:
-                    System.out.println("Opção Inválida!");
-                    break;
+            try {
+                opcao = this.scanner.nextInt();
+                switch (opcao) {
+                    case 1:
+                        this.Listar();  
+                        break;
+                    case 2:
+                        this.Localizar();
+                        break;
+                    case 3:
+                        this.Adicionar();        
+                        break;
+                    case 4:
+                        this.Atualizar();
+                        break;
+                    case 5:
+                        this.Remover();        
+                        break;
+                    case 9:
+                        this.menuzao.ExibirMenuzao();
+                        break;
+                    default:
+                        System.out.println("Opção Inválida!");
+                        break;
+                }
+            } catch (Exception e) {
+                System.out.println("Erro: " +e.getMessage());
+                System.out.println("Clique <ENTER> para continuar...");
+                this.scanner.nextLine();
+                this.scanner.nextLine();
             }
         }
     }
@@ -59,13 +67,18 @@ public class FuncionarioMenu extends BaseMenu{
     public void Listar() {
         Util.LimparConsole();
         System.out.println("listando");
-
-        ArrayList<Funcionario> lista = this.srv.Navegar();
-        System.out.println("=====================================================");
-        for (Funcionario alvo : lista) {
-            this.ImprimirPorLinha(alvo);
+        try {
+            ArrayList<Funcionario> lista = this.srv.Navegar();
+            System.out.println("=====================================================");
+            for (Funcionario alvo : lista) {
+                this.ImprimirPorLinha(alvo);
+            }   
+        } catch (Exception e) {
+            System.out.println("Erro: " +e.getMessage());
+            System.out.println("Clique <ENTER> para continuar...");
+            this.scanner.nextLine();
+            this.scanner.nextLine();
         }
-
         System.out.println("Clique <ENTER> para continuar...");
         this.scanner.nextLine();
         this.scanner.nextLine();
@@ -76,16 +89,21 @@ public class FuncionarioMenu extends BaseMenu{
         Util.LimparConsole();      
         System.out.println("Localizando");
 
-        System.out.print("Informe o código da Funcionario: ");
+        System.out.print("Informe o código do Funcionario: ");
         int cod = this.scanner.nextInt();
-
-        Funcionario cp = this.srv.Ler(cod);
-        if(cp != null){
-            this.ImprimirPorLinha(cp);
-        }else{
-            System.out.println("PROBLEMA - Funcionario não encontrado!");
+        try {
+            Funcionario novFuncionario = this.srv.Ler(cod);
+            if(novFuncionario != null){
+                this.ImprimirPorLinha(novFuncionario);
+            }else{
+                System.out.println("PROBLEMA - Funcionario não encontrado!");
+            }   
+        } catch (Exception e) {
+            System.out.println("Erro: " +e.getMessage());
+            System.out.println("Clique <ENTER> para continuar...");
+            this.scanner.nextLine();
+            this.scanner.nextLine();
         }
-
         System.out.println("Clique <ENTER> para continuar...");
         this.scanner.nextLine();
         this.scanner.nextLine();
@@ -94,22 +112,35 @@ public class FuncionarioMenu extends BaseMenu{
     @Override
     public void Adicionar() {
         Util.LimparConsole();      
-        System.out.println("Adicionando");
-
-        System.out.print("Informe a descrição do novo Funcionario: ");
-        String descricao = this.scanner.next();
-
-        Funcionario cp = new Funcionario();
-        cp.setDescricao(descricao);
-        cp.setDataDeInclusao(LocalDate.now());
-
-        //ClasseProduto cpnovo = this.srv.Adicionar(cp); //<-método didatico
-        if(this.srv.Adicionar(cp) != null){
-            System.out.println("Funcionario adicionado com sucesso!");
-        }else{
-            System.out.println("PROBLEMA - Erro ao adicionar um novo Funcionario!");
+        System.out.print("Adicionando");
+        System.out.print("Informe o nome do novo Funcionario: ");
+        String nome = this.scanner.next();
+        System.out.print("Informe o email do novo Funcionario: ");
+        String email = this.scanner.next();
+        System.out.print("Informe o telefone do novo Funcionario: ");
+        String telefone = this.scanner.next();
+        System.out.print("Informe o Cargo do funcionario: ");
+        String cargo = this.scanner.next();
+        System.out.print("Informe o Salario deste Funcionario: ");
+        Double salario = this.scanner.nextDouble();
+        Funcionario novFuncionario = new Funcionario();
+        novFuncionario.setNome(nome);
+        novFuncionario.setEmail(email);
+        novFuncionario.setTelefone(telefone);
+        novFuncionario.setSalario(salario);
+        novFuncionario.setCargo(cargo);
+        try {
+            if(this.srv.Adicionar(novFuncionario) != null){
+                System.out.println("Funcionario adicionado com sucesso!");
+            }else{
+                System.out.println("PROBLEMA - Erro ao adicionar um novo Funcionario!");
+            }
+        } catch (Exception e) {
+            System.out.println("Erro: " +e.getMessage());
+            System.out.println("Clique <ENTER> para continuar...");
+            this.scanner.nextLine();
+            this.scanner.nextLine();
         }
-
         System.out.println("Clique <ENTER> para continuar...");
         this.scanner.nextLine();
         this.scanner.nextLine();
@@ -119,26 +150,37 @@ public class FuncionarioMenu extends BaseMenu{
     public void Atualizar() {
         Util.LimparConsole();      
         System.out.println("Atualizando");
-
         System.out.print("Informe o código do Funcionario: ");
         int cod = this.scanner.nextInt();
-
-        Funcionario cp = this.srv.Ler(cod);
-        if(cp != null){
-            System.out.print("Informe a nova Descrição: ");
-            String descricao = this.scanner.next();
-            cp.setDescricao(descricao);
-            
-            if(this.srv.Editar(cp) != null){
-                System.out.println("Alteração realizada com sucesso!");
+        try {
+            Funcionario novFuncionario = this.srv.Ler(cod);
+            if(novFuncionario != null){
+                System.out.print("Informe o novo e-mail: ");
+                String email = this.scanner.next();
+                novFuncionario.setEmail(email);
+                System.out.print("Informe o novo telefone: ");
+                String telefone = this.scanner.next();
+                novFuncionario.setTelefone(telefone);
+                System.out.print("Informe o novo Cargo: ");
+                String cargo = this.scanner.next();
+                novFuncionario.setCargo(cargo);
+                System.out.print("Informe o novo salario: ");
+                Double salario = this.scanner.nextDouble();
+                novFuncionario.setSalario(salario);
+                if(this.srv.Editar(novFuncionario) != null){
+                    System.out.println("Alteração realizada com sucesso!");
+                }else{
+                    System.out.println("PROBLEMA - Não foi possível realizar a alteração solicitada!");
+                }
             }else{
-                System.out.println("PROBLEMA - Não foi possível realizar a alteração solicitada!");
-            }
-
-        }else{
-            System.out.println("PROBLEMA - Funcionario não encontrado!");
+                System.out.println("PROBLEMA - Funcionario não encontrado!");
+            }   
+        } catch (Exception e) {
+            System.out.println("Erro: " +e.getMessage());
+            System.out.println("Clique <ENTER> para continuar...");
+            this.scanner.nextLine();
+            this.scanner.nextLine();
         }
-
         System.out.println("Clique <ENTER> para continuar...");
         this.scanner.nextLine();
         this.scanner.nextLine();
@@ -148,36 +190,40 @@ public class FuncionarioMenu extends BaseMenu{
     public void Remover() {
         Util.LimparConsole();      
         System.out.println("Removendo");
-
         System.out.print("Informe o código do Funcionario: ");
         int cod = this.scanner.nextInt();
-
-        Funcionario cp = this.srv.Ler(cod);
-        if(cp != null){
-            if(this.srv.Deletar(cod) != null){
-                System.out.println("Funcionario excluído com sucesso!");
+        try {
+            Funcionario novFuncionario = this.srv.Ler(cod);
+            if(novFuncionario != null){
+                if(this.srv.Deletar(cod) != null){
+                    System.out.println("Funcionario excluído com sucesso!");
+                }else{
+                    System.out.println("PROBLEMA - Funcionario não foi excluído!");
+                }
             }else{
-                System.out.println("PROBLEMA - Funcionario não foi excluída!");
+                System.out.println("PROBLEMA - Funcionario não encontrado!");
             }
-        }else{
-            System.out.println("PROBLEMA - Funcionario não encontrado!");
+        } catch (Exception e) {
+            System.out.println("Erro: " +e.getMessage());
+            System.out.println("Clique <ENTER> para continuar...");
+            this.scanner.nextLine();
+            this.scanner.nextLine();
         }
-
         System.out.println("Clique <ENTER> para continuar...");
         this.scanner.nextLine();
         this.scanner.nextLine();
     }
 
-        private void ImprimirPorLinha(Funcionario alvo){
-        String mensagem = "";
-        mensagem += "Funcionario: ";
-        mensagem += "Código: " +alvo.getCodigo() +" | ";
-        mensagem += "Nome: " +alvo.getNome()+" | ";
-        mensagem += "Email: " +alvo.getEmail()+" | ";
-        mensagem += "Telefone: " +alvo.getTelefone()+ "|";
-        mensagem += "Cargo: " +alvo.getCargo() + "|";
-        mensagem += "Salario: " +alvo.getSalario() + "|";
-        System.out.println(mensagem);
+    private void ImprimirPorLinha(Funcionario alvo){
+    String mensagem = "";
+    mensagem += "Funcionario: ";
+    mensagem += "Código: " +alvo.getCodigo() +" | ";
+    mensagem += "Nome: " +alvo.getNome()+" | ";
+    mensagem += "Email: " +alvo.getEmail()+" | ";
+    mensagem += "Telefone: " +alvo.getTelefone()+ "|";
+    mensagem += "Cargo: " +alvo.getCargo() + "|";
+    mensagem += "Salario: " +alvo.getSalario() + "|";
+    System.out.println(mensagem);
     }
     
 }

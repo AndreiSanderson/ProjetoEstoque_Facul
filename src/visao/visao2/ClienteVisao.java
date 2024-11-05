@@ -58,7 +58,6 @@ public class ClienteVisao{
     public void Editar(int chave, Cliente alt){
         Cliente alvo = this.srv.Ler(chave);
         if (alvo != null){
-            alvo.setNome(alt.getNome());
             alvo.setEmail(alt.getEmail());
             alvo.setTelefone(alt.getTelefone());
         }else{

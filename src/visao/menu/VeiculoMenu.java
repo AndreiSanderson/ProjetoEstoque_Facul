@@ -4,10 +4,12 @@ import java.util.ArrayList;
 
 import dominio.Veiculo;
 import servico.VeiculoServico;
+import visao.Menuzao;
 import visao.Util;
 
 public class VeiculoMenu extends BaseMenu{
-        private VeiculoServico srv;
+    Menuzao menuzao = new Menuzao();
+    private VeiculoServico srv;
 
     public VeiculoMenu(){
         super();
@@ -27,30 +29,36 @@ public class VeiculoMenu extends BaseMenu{
             System.out.println("5 - Remover");
             System.out.println("9 - Sair");
             System.out.print("Selecione uma opção: ");
-
-            opcao = this.scanner.nextInt();
-            switch (opcao) {
-                case 1:
-                    this.Listar();  
-                    break;
-                case 2:
-                    this.Localizar();
-                    break;
-                case 3:
-                    this.Adicionar();        
-                    break;
-                case 4:
-                    this.Atualizar();
-                    break;
-                case 5:
-                    this.Remover();        
-                    break;
-                case 9:
-                    System.out.println("Saindo...");
-                    break;
-                default:
-                    System.out.println("Opção Inválida!");
-                    break;
+            try {
+                opcao = this.scanner.nextInt();
+                switch (opcao) {
+                    case 1:
+                        this.Listar();  
+                        break;
+                    case 2:
+                        this.Localizar();
+                        break;
+                    case 3:
+                        this.Adicionar();        
+                        break;
+                    case 4:
+                        this.Atualizar();
+                        break;
+                    case 5:
+                        this.Remover();        
+                        break;
+                    case 9:
+                        this.menuzao.ExibirMenuzao();
+                        break;
+                    default:
+                        System.out.println("Opção Inválida!");
+                        break;
+                }
+            } catch (Exception e) {
+                System.out.println("Erro: " +e.getMessage());
+                System.out.println("Clique <ENTER> para continuar...");
+                this.scanner.nextLine();
+                this.scanner.nextLine();
             }
         }
     }
@@ -59,13 +67,18 @@ public class VeiculoMenu extends BaseMenu{
     public void Listar() {
         Util.LimparConsole();
         System.out.println("listando");
-
-        ArrayList<Veiculo> lista = this.srv.Navegar();
-        System.out.println("=====================================================");
-        for (Veiculo alvo : lista) {
-            this.ImprimirPorLinha(alvo);
+        try {
+            ArrayList<Veiculo> lista = this.srv.Navegar();
+            System.out.println("=====================================================");
+            for (Veiculo alvo : lista) {
+                this.ImprimirPorLinha(alvo);
+            }
+        } catch (Exception e) {
+            System.out.println("Erro: " +e.getMessage());
+            System.out.println("Clique <ENTER> para continuar...");
+            this.scanner.nextLine();
+            this.scanner.nextLine();
         }
-
         System.out.println("Clique <ENTER> para continuar...");
         this.scanner.nextLine();
         this.scanner.nextLine();
@@ -75,17 +88,21 @@ public class VeiculoMenu extends BaseMenu{
     public void Localizar() {
         Util.LimparConsole();      
         System.out.println("Localizando");
-
         System.out.print("Informe o código do Veiculo: ");
         int cod = this.scanner.nextInt();
-
-        Veiculo cp = this.srv.Ler(cod);
-        if(cp != null){
-            this.ImprimirPorLinha(cp);
-        }else{
-            System.out.println("PROBLEMA - Veiculo não encontrado!");
+        try {
+            Veiculo novoVeiculo = this.srv.Ler(cod);
+            if(novoVeiculo != null){
+                this.ImprimirPorLinha(novoVeiculo);
+            }else{
+                System.out.println("PROBLEMA - Veiculo não encontrado!");
+            }
+        } catch (Exception e) {
+            System.out.println("Erro: " +e.getMessage());
+            System.out.println("Clique <ENTER> para continuar...");
+            this.scanner.nextLine();
+            this.scanner.nextLine();
         }
-
         System.out.println("Clique <ENTER> para continuar...");
         this.scanner.nextLine();
         this.scanner.nextLine();
@@ -95,21 +112,31 @@ public class VeiculoMenu extends BaseMenu{
     public void Adicionar() {
         Util.LimparConsole();      
         System.out.println("Adicionando");
-
-        System.out.print("Informe a descrição do novo Veiculo: ");
-        String descricao = this.scanner.next();
-
-        Veiculo cp = new Veiculo();
-        cp.setDescricao(descricao);
-        cp.setDataDeInclusao(LocalDate.now());
-
-        //Veiculo cpnovo = this.srv.Adicionar(cp); //<-método didatico
-        if(this.srv.Adicionar(cp) != null){
-            System.out.println("Veiculo adicionado com sucesso!");
-        }else{
-            System.out.println("PROBLEMA - Erro ao adicionar um novo Veiculo!");
+        System.out.print("Informe a Marca do novo Veiculo: ");
+        String marca = this.scanner.next();
+        System.out.print("Informe o Modelo do veiculo: ");
+        String modelo = this.scanner.next();
+        System.out.print("Informe o Ano de Fabricação: ");
+        int anoFabricacao = this.scanner.nextInt();
+        System.out.print("Informe o Preço do veiculo: ");
+        double preco = this.scanner.nextDouble();
+        Veiculo novoVeiculo = new Veiculo();
+        novoVeiculo.setAnoFabricacao(anoFabricacao);
+        novoVeiculo.setMarca(marca);
+        novoVeiculo.setModelo(modelo);
+        novoVeiculo.setPreco(preco);
+        try {
+            if(this.srv.Adicionar(novoVeiculo) != null){
+                System.out.println("Veiculo adicionado com sucesso!");
+            }else{
+                System.out.println("PROBLEMA - Erro ao adicionar um novo Veiculo!");
+            }
+        } catch (Exception e) {
+            System.out.println("Erro: " +e.getMessage());
+            System.out.println("Clique <ENTER> para continuar...");
+            this.scanner.nextLine();
+            this.scanner.nextLine();
         }
-
         System.out.println("Clique <ENTER> para continuar...");
         this.scanner.nextLine();
         this.scanner.nextLine();
@@ -119,26 +146,28 @@ public class VeiculoMenu extends BaseMenu{
     public void Atualizar() {
         Util.LimparConsole();      
         System.out.println("Atualizando");
-
         System.out.print("Informe o código do Veiculo: ");
         int cod = this.scanner.nextInt();
-
-        Veiculo cp = this.srv.Ler(cod);
-        if(cp != null){
-            System.out.print("Informe a nova Descrição: ");
-            String descricao = this.scanner.next();
-            cp.setDescricao(descricao);
-            
-            if(this.srv.Editar(cp) != null){
-                System.out.println("Alteração realizada com sucesso!");
+        try {
+            Veiculo novoVeiculo = this.srv.Ler(cod);
+            if(novoVeiculo != null){
+                System.out.print("Informe o novo preço do veiculo: ");
+                double preco = this.scanner.nextDouble();
+                novoVeiculo.setPreco(preco);
+                if(this.srv.Editar(novoVeiculo) != null){
+                    System.out.println("Alteração realizada com sucesso!");
+                }else{
+                    System.out.println("PROBLEMA - Não foi possível realizar a alteração solicitada!");
+                }
             }else{
-                System.out.println("PROBLEMA - Não foi possível realizar a alteração solicitada!");
+                System.out.println("PROBLEMA - Veiculo não encontrado!");
             }
-
-        }else{
-            System.out.println("PROBLEMA - Veiculo não encontrado!");
+        } catch (Exception e) {
+            System.out.println("Erro: " +e.getMessage());
+            System.out.println("Clique <ENTER> para continuar...");
+            this.scanner.nextLine();
+            this.scanner.nextLine();
         }
-
         System.out.println("Clique <ENTER> para continuar...");
         this.scanner.nextLine();
         this.scanner.nextLine();
@@ -148,21 +177,25 @@ public class VeiculoMenu extends BaseMenu{
     public void Remover() {
         Util.LimparConsole();      
         System.out.println("Removendo");
-
         System.out.print("Informe o código do Veiculo: ");
         int cod = this.scanner.nextInt();
-
-        Veiculo cp = this.srv.Ler(cod);
-        if(cp != null){
-            if(this.srv.Deletar(cod) != null){
-                System.out.println("Veiculo excluída com sucesso!");
+        try {
+            Veiculo novoVeiculo = this.srv.Ler(cod);
+            if(novoVeiculo != null){
+                if(this.srv.Deletar(cod) != null){
+                    System.out.println("Veiculo excluída com sucesso!");
+                }else{
+                    System.out.println("PROBLEMA - Veiculo não foi excluído!");
+                }
             }else{
-                System.out.println("PROBLEMA - Veiculo não foi excluído!");
+                System.out.println("PROBLEMA - Veiculo não encontrado!");
             }
-        }else{
-            System.out.println("PROBLEMA - Veiculo não encontrado!");
+        } catch (Exception e) {
+            System.out.println("Erro: " +e.getMessage());
+            System.out.println("Clique <ENTER> para continuar...");
+            this.scanner.nextLine();
+            this.scanner.nextLine();
         }
-
         System.out.println("Clique <ENTER> para continuar...");
         this.scanner.nextLine();
         this.scanner.nextLine();

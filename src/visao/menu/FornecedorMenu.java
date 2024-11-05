@@ -4,10 +4,12 @@ import java.util.ArrayList;
 
 import dominio.Fornecedor;
 import servico.FornecedorServico;
+import visao.Menuzao;
 import visao.Util;
 
 public class FornecedorMenu extends BaseMenu{
-        private FornecedorServico srv;
+    Menuzao menuzao = new Menuzao();
+    private FornecedorServico srv;
 
     public FornecedorMenu(){
         super();
@@ -27,30 +29,36 @@ public class FornecedorMenu extends BaseMenu{
             System.out.println("5 - Remover");
             System.out.println("9 - Sair");
             System.out.print("Selecione uma opção: ");
-
-            opcao = this.scanner.nextInt();
-            switch (opcao) {
-                case 1:
-                    this.Listar();  
-                    break;
-                case 2:
-                    this.Localizar();
-                    break;
-                case 3:
-                    this.Adicionar();        
-                    break;
-                case 4:
-                    this.Atualizar();
-                    break;
-                case 5:
-                    this.Remover();        
-                    break;
-                case 9:
-                    System.out.println("Saindo...");
-                    break;
-                default:
-                    System.out.println("Opção Inválida!");
-                    break;
+            try {
+                opcao = this.scanner.nextInt();
+                switch (opcao) {
+                    case 1:
+                        this.Listar();  
+                        break;
+                    case 2:
+                        this.Localizar();
+                        break;
+                    case 3:
+                        this.Adicionar();        
+                        break;
+                    case 4:
+                        this.Atualizar();
+                        break;
+                    case 5:
+                        this.Remover();        
+                        break;
+                    case 9:
+                        this.menuzao.ExibirMenuzao();
+                        break;
+                    default:
+                        System.out.println("Opção Inválida!");
+                        break;
+                }
+            } catch (Exception e) {
+                System.out.println("Erro: " +e.getMessage());
+                System.out.println("Clique <ENTER> para continuar...");
+                this.scanner.nextLine();
+                this.scanner.nextLine();
             }
         }
     }
@@ -59,13 +67,18 @@ public class FornecedorMenu extends BaseMenu{
     public void Listar() {
         Util.LimparConsole();
         System.out.println("listando");
-
-        ArrayList<Fornecedor> lista = this.srv.Navegar();
-        System.out.println("=====================================================");
-        for (Fornecedor alvo : lista) {
-            this.ImprimirPorLinha(alvo);
+        try {
+            ArrayList<Fornecedor> lista = this.srv.Navegar();
+            System.out.println("=====================================================");
+            for (Fornecedor alvo : lista) {
+                this.ImprimirPorLinha(alvo);
+            }
+        } catch (Exception e) {
+            System.out.println("Erro: " +e.getMessage());
+            System.out.println("Clique <ENTER> para continuar...");
+            this.scanner.nextLine();
+            this.scanner.nextLine();
         }
-
         System.out.println("Clique <ENTER> para continuar...");
         this.scanner.nextLine();
         this.scanner.nextLine();
@@ -75,17 +88,21 @@ public class FornecedorMenu extends BaseMenu{
     public void Localizar() {
         Util.LimparConsole();      
         System.out.println("Localizando");
-
-        System.out.print("Informe o código do ornecedor: ");
+        System.out.print("Informe o código do Fornecedor: ");
         int cod = this.scanner.nextInt();
-
-        Fornecedor cp = this.srv.Ler(cod);
-        if(cp != null){
-            this.ImprimirPorLinha(cp);
-        }else{
-            System.out.println("PROBLEMA - Fornecedor não encontrado    !");
+        try {
+            Fornecedor novoFornecedor = this.srv.Ler(cod);
+            if(novoFornecedor != null){
+                this.ImprimirPorLinha(novoFornecedor);
+            }else{
+                System.out.println("PROBLEMA - Fornecedor não encontrado!");
+            }
+        } catch (Exception e) {
+            System.out.println("Erro: " +e.getMessage());
+            System.out.println("Clique <ENTER> para continuar...");
+            this.scanner.nextLine();
+            this.scanner.nextLine();
         }
-
         System.out.println("Clique <ENTER> para continuar...");
         this.scanner.nextLine();
         this.scanner.nextLine();
@@ -95,21 +112,34 @@ public class FornecedorMenu extends BaseMenu{
     public void Adicionar() {
         Util.LimparConsole();      
         System.out.println("Adicionando");
-
-        System.out.print("Informe a descrição do novo FOrnecedor: ");
-        String descricao = this.scanner.next();
-
-        Fornecedor cp = new Fornecedor();
-        cp.setDescricao(descricao);
-        cp.setDataDeInclusao(LocalDate.now());
-
-        //ClasseProduto cpnovo = this.srv.Adicionar(cp); //<-método didatico
-        if(this.srv.Adicionar(cp) != null){
-            System.out.println("Fornecedor adicionado com sucesso!");
-        }else{
-            System.out.println("PROBLEMA - Erro ao adicionar uma novo fornecedor!");
+        System.out.print("Informe a Razão Social do Fornecedor: ");
+        String razaoSocial = this.scanner.next();
+        System.out.print("Informe o CNPJ do Fornecedor: ");
+        String cnpj = this.scanner.next();
+        System.out.print("Informe o Nome Fantasia do Fornecedor: ");
+        String nomeFantasia = this.scanner.next();
+        System.out.print("Informe o email do novo Cliente: ");
+        String email = this.scanner.next();
+        System.out.print("Informe o telefone do novo Cliente: ");
+        String telefone = this.scanner.next();
+        Fornecedor novoFornecedor = new Fornecedor();
+        novoFornecedor.setNome(razaoSocial);
+        novoFornecedor.setCnpj(cnpj);
+        novoFornecedor.setNomeFantasia(nomeFantasia);
+        novoFornecedor.setEmail(email);
+        novoFornecedor.setTelefone(telefone);
+        try {
+            if(this.srv.Adicionar(novoFornecedor) != null){
+                System.out.println("Fornecedor adicionado com sucesso!");
+            }else{
+                System.out.println("PROBLEMA - Erro ao adicionar um novo fornecedor!");
+            }            
+        } catch (Exception e) {
+            System.out.println("Erro: " +e.getMessage());
+            System.out.println("Clique <ENTER> para continuar...");
+            this.scanner.nextLine();
+            this.scanner.nextLine();
         }
-
         System.out.println("Clique <ENTER> para continuar...");
         this.scanner.nextLine();
         this.scanner.nextLine();
@@ -119,26 +149,38 @@ public class FornecedorMenu extends BaseMenu{
     public void Atualizar() {
         Util.LimparConsole();      
         System.out.println("Atualizando");
-
         System.out.print("Informe o código do Fornecedor: ");
         int cod = this.scanner.nextInt();
+        try {
+            Fornecedor novoFornecedor = this.srv.Ler(cod);
+            if(novoFornecedor != null){
+                System.out.print("Informe a nova Razão Social: ");
+                String razaoSocial = this.scanner.next();
+                novoFornecedor.setNome(razaoSocial);
+                System.out.print("Informe o Nome Fantasia: ");
+                String nomeFantasia = this.scanner.next();
+                novoFornecedor.setNomeFantasia(nomeFantasia);
+                System.out.print("Informe o email: ");
+                String email = this.scanner.next();
+                novoFornecedor.setEmail(email);
+                System.out.print("Informe o telefone: ");
+                String telefone = this.scanner.next();
+                novoFornecedor.setTelefone(telefone);
+                if(this.srv.Editar(novoFornecedor) != null){
+                    System.out.println("Alteração realizada com sucesso!");
+                }else{
+                    System.out.println("PROBLEMA - Não foi possível realizar a alteração solicitada!");
+                }
 
-        Fornecedor cp = this.srv.Ler(cod);
-        if(cp != null){
-            System.out.print("Informe a nova Descrição: ");
-            String descricao = this.scanner.next();
-            cp.setDescricao(descricao);
-            
-            if(this.srv.Editar(cp) != null){
-                System.out.println("Alteração realizada com sucesso!");
             }else{
-                System.out.println("PROBLEMA - Não foi possível realizar a alteração solicitada!");
-            }
-
-        }else{
-            System.out.println("PROBLEMA - Fornecedor não encontrado!");
+                System.out.println("PROBLEMA - Fornecedor não encontrado!");
+            }   
+        } catch (Exception e) {
+            System.out.println("Erro: " +e.getMessage());
+            System.out.println("Clique <ENTER> para continuar...");
+            this.scanner.nextLine();
+            this.scanner.nextLine();
         }
-
         System.out.println("Clique <ENTER> para continuar...");
         this.scanner.nextLine();
         this.scanner.nextLine();
@@ -148,36 +190,40 @@ public class FornecedorMenu extends BaseMenu{
     public void Remover() {
         Util.LimparConsole();      
         System.out.println("Removendo");
-
         System.out.print("Informe o código do Fornecedor: ");
         int cod = this.scanner.nextInt();
-
-        Fornecedor cp = this.srv.Ler(cod);
-        if(cp != null){
-            if(this.srv.Deletar(cod) != null){
-                System.out.println("Fornecedor excluído com sucesso!");
+        try {
+            Fornecedor novoFornecedor = this.srv.Ler(cod);
+            if(novoFornecedor != null){
+                if(this.srv.Deletar(cod) != null){
+                    System.out.println("Fornecedor excluído com sucesso!");
+                }else{
+                    System.out.println("PROBLEMA - Fornecedor não foi excluído!");
+                }
             }else{
-                System.out.println("PROBLEMA - Fornecedor não foi excluída!");
-            }
-        }else{
-            System.out.println("PROBLEMA - Fornecedor não encontrado!");
+                System.out.println("PROBLEMA - Fornecedor não encontrado!");
+            }   
+        } catch (Exception e) {
+            System.out.println("Erro: " +e.getMessage());
+            System.out.println("Clique <ENTER> para continuar...");
+            this.scanner.nextLine();
+            this.scanner.nextLine();
         }
-
         System.out.println("Clique <ENTER> para continuar...");
         this.scanner.nextLine();
         this.scanner.nextLine();
     }
 
-        private void ImprimirPorLinha(Fornecedor alvo){
-        String mensagem = "";
-        mensagem += "Fornecedor: ";
-        mensagem += "Código: " +alvo.getCodigo() +" | ";
-        mensagem += "Razão Social: " +alvo.getNome()+" | ";
-        mensagem += "CNPJ: " +alvo.getCnpj()+" | ";
-        mensagem += "Nome Fantasia: " +alvo.getNomeFantasia() +"|";
-        mensagem += "Email: " + alvo.getEmail() +"|";
-        mensagem += "Telefone: " + alvo.getTelefone()+ "|";
-        System.out.println(mensagem);
+    private void ImprimirPorLinha(Fornecedor alvo){
+    String mensagem = "";
+    mensagem += "Fornecedor: ";
+    mensagem += "Código: " +alvo.getCodigo() +" | ";
+    mensagem += "Razão Social: " +alvo.getNome()+" | ";
+    mensagem += "CNPJ: " +alvo.getCnpj()+" | ";
+    mensagem += "Nome Fantasia: " +alvo.getNomeFantasia() +"|";
+    mensagem += "Email: " + alvo.getEmail() +"|";
+    mensagem += "Telefone: " + alvo.getTelefone()+ "|";
+    System.out.println(mensagem);
     }
 }
 
