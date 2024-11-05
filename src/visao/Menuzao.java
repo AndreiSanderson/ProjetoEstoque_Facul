@@ -30,7 +30,7 @@ public class Menuzao {
         Scanner scanner = new Scanner(System.in);
         Util.LimparConsole();
         System.out.println("Por gentileza, informe qual modulo deseja utilizar:");
-        System.out.printf("1 - Classe Produto\n2 - SubClasse Produto\n3 - Produto\n4 - Cliente\n5 - Curso\n6 - Fornecedor\n7 - Funcionario\n8 - Livro\n9 - Veiculo\n0 - Sair\n");
+        System.out.printf("========================\n1 - Classe Produto\n========================\n2 - SubClasse Produto\n========================\n3 - Produto\n========================\n4 - Cliente\n========================\n5 - Curso\n========================\n6 - Fornecedor\n========================\n7 - Funcionario\n========================\n8 - Livro\n========================\n9 - Veiculo\n========================\n0 - Sair\n========================\n");
         try {
             opcao = scanner.nextInt();
             switch (opcao) {
